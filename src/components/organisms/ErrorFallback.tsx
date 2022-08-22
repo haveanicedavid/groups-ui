@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/atoms'
+import { Card } from '@/atoms'
 import { AlertTemplate } from '@/templates'
 
 export const ErrorFallback = ({
@@ -16,11 +16,11 @@ export const ErrorFallback = ({
       text="There was a problem"
     >
       <Card>
-        <CardContent>
-          <pre>
-            <code>{error.message}</code>
-          </pre>
-        </CardContent>
+        {/* <CardContent> */}
+        <pre>
+          <code>{error.message}</code>
+        </pre>
+        {/* </CardContent> */}
       </Card>
     </AlertTemplate>
     // <CenterCol>

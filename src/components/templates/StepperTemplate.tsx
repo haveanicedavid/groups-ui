@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { CenterCol, Text } from '@/atoms'
+import { Stack, Title } from '@/atoms'
 import { PageStepper } from '@/molecules'
 
 import { PageTemplate } from './PageTemplate'
@@ -12,14 +12,14 @@ export const StepperTemplate = (props: {
 }) => {
   const { activeStep, children, steps } = props
   return (
-    <CenterCol sx={{ justifyContent: 'flex-start' }}>
+    <Stack justify="flex-start">
       <PageStepper activeStep={activeStep} steps={steps} />
       <PageTemplate>
-        <Text variant="h2" sx={{ textAlign: 'center' }}>
+        <Title order={2} sx={{ textAlign: 'center' }}>
           {steps[activeStep]}
-        </Text>
+        </Title>
         {children}
       </PageTemplate>
-    </CenterCol>
+    </Stack>
   )
 }

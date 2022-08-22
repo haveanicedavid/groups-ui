@@ -1,9 +1,9 @@
-import { Center, CircularProgress } from '@/atoms'
+import { Center, Loader } from '@/atoms'
 
 export const Spinner = () => {
   return (
     <Center>
-      <CircularProgress color="primary" />
+      <Loader variant="oval" />
     </Center>
   )
 }

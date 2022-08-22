@@ -1,17 +1,19 @@
-import { Button, Flex, RouteLink, Text } from '@/atoms'
+import { Link } from 'react-router-dom'
+
+import { Button, Group, Title } from '@/atoms'
 import { PageTemplate } from '@/templates'
 
 const Groups = () => {
   return (
     <PageTemplate>
-      <Flex justifyContent="space-between">
-        <Text variant="h4">Groups</Text>
+      <Group position="apart">
+        <Title order={3}>Groups</Title>
         <div>
-          <Button size="large" variant="contained" component={RouteLink} to="/groups/new">
+          <Button size="lg" component={Link} to="/groups/new">
             Create Group
           </Button>
         </div>
-      </Flex>
+      </Group>
     </PageTemplate>
   )
 }

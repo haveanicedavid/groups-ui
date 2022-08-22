@@ -1,14 +1,15 @@
 import { useNavigate } from 'react-router-dom'
+import { Header } from '@mantine/core'
 
 import {
-  AppBar,
+  // AppBar,
   Box,
   Container,
   GroupsIcon,
-  IconButton,
-  Link,
+  // IconButton,
+  // Link,
   Text,
-  Toolbar,
+  // Toolbar,
 } from '@/atoms'
 
 import { ChainSelect } from './ChainSelect'
@@ -17,17 +18,19 @@ export const Navbar = () => {
   const navigate = useNavigate()
 
   return (
-    <AppBar
-      position="static"
-      color="transparent"
-      elevation={0}
-      sx={{
-        borderBottom: 2,
-        borderColor: 'divider',
-      }}
+    <Header
+      height={74}
+      // position=""
+      fixed={false}
+      // color="transparent"
+      // elevation={0}
+      // sx={{
+      //   borderBottom: 2,
+      //   borderColor: 'divider',
+      // }}
     >
       <Container>
-        <Toolbar sx={{ my: 2 }} disableGutters>
+        {/* <Toolbar sx={{ my: 2 }} disableGutters>
           <IconButton
             size="large"
             edge="start"
@@ -41,24 +44,25 @@ export const Navbar = () => {
           <Text variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Groups UI
           </Text>
-          {/* TODO delete this */}
           <TempNav />
           <Box sx={{ flexGrow: 1, maxWidth: 300 }}>
             <ChainSelect />
           </Box>
-        </Toolbar>
+        </Toolbar> */}
+
+        <ChainSelect />
       </Container>
-    </AppBar>
+    </Header>
   )
 }
 
-const TempNav = () => (
-  <Box component="ul" sx={{ display: 'flex', gap: 2, mr: 5, listStyle: 'none' }}>
-    <li>
-      <Link to="/">Home</Link>
-    </li>
-    <li>
-      <Link to="groups">Groups</Link>
-    </li>
-  </Box>
-)
+// const TempNav = () => (
+//   <Box component="ul" sx={{ display: 'flex', gap: 2, mr: 5, listStyle: 'none' }}>
+//     <li>
+//       <Link to="/">Home</Link>
+//     </li>
+//     <li>
+//       <Link to="groups">Groups</Link>
+//     </li>
+//   </Box>
+// )

@@ -1,12 +1,12 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { GroupsIcon } from '@/atoms'
+import { ActionIcon, GroupsIcon } from '@/atoms'
 
-import { IconButton } from '../MuiReExports'
+// import { IconButton } from '../MuiReExports'
 
 export default {
   title: 'Atoms/IconButton',
-  component: IconButton,
+  component: ActionIcon,
   argTypes: {
     size: {
       options: ['small', 'medium', 'large'],
@@ -17,12 +17,12 @@ export default {
       control: 'radio',
     },
   },
-} as ComponentMeta<typeof IconButton>
+} as ComponentMeta<typeof ActionIcon>
 
-const Template: ComponentStory<typeof IconButton> = (args) => (
-  <IconButton {...args}>
+const Template: ComponentStory<typeof ActionIcon> = (args) => (
+  <ActionIcon {...args}>
     <GroupsIcon />
-  </IconButton>
+  </ActionIcon>
 )
 
 export const Component = Template.bind({})
