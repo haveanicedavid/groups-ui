@@ -1,12 +1,12 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { Spinner } from '../Spinner'
+import { Loader } from '../Loader'
 
 export default {
-  title: 'Molecules/Spinner',
-  component: Spinner,
-} as ComponentMeta<typeof Spinner>
+  title: 'Molecules/Loader',
+  component: Loader,
+} as ComponentMeta<typeof Loader>
 
-const Template: ComponentStory<typeof Spinner> = () => <Spinner />
+const Template: ComponentStory<typeof Loader> = () => <Loader />
 
 export const Component = Template.bind({})

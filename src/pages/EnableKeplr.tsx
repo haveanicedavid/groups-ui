@@ -6,7 +6,7 @@ import { AlertTemplate } from '@/templates'
 export const EnableKeplr = () => {
   return (
     <AlertTemplate
-      // severity="info"
+      color="blue"
       text="You need to enable Keplr to run this app"
       btnText="Enable"
       onBtnClick={enableKeplr}

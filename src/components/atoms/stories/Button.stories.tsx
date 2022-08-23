@@ -11,7 +11,7 @@ export default {
       control: 'radio',
     },
     size: {
-      options: ['small', 'medium', 'large'],
+      options: ['sm', 'md', 'lg', 'xl'],
       control: 'radio',
     },
     color: {
@@ -27,5 +27,5 @@ const Template: ComponentStory<typeof Button> = (args) => (
 
 export const Component = Template.bind({})
 Component.args = {
-  variant: 'contained',
+  // variant: 'contained',
 }

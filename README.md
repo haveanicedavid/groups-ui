@@ -39,8 +39,6 @@ You'll need to import generated wallet info into Keplr in order to test features
 high return silly coyote skin trumpet stock bicycle enjoy common exact sure
 ```
 
-## Configure Keplr
-
 # Architecture
 
 TODO

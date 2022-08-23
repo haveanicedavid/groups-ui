@@ -9,11 +9,7 @@ export default {
   component: ActionIcon,
   argTypes: {
     size: {
-      options: ['small', 'medium', 'large'],
-      control: 'radio',
-    },
-    color: {
-      options: ['primary', 'secondary'],
+      options: ['sm', 'md', 'lg', 'xl'],
       control: 'radio',
     },
   },
@@ -26,4 +22,7 @@ const Template: ComponentStory<typeof ActionIcon> = (args) => (
 )
 
 export const Component = Template.bind({})
-Component.args = {}
+Component.args = {
+  size: 'xl',
+  radius: 'md',
+}

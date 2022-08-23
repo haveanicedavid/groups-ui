@@ -13,7 +13,11 @@ export default {
   },
 } as ComponentMeta<typeof GroupsIcon>
 
-const Template: ComponentStory<typeof GroupsIcon> = () => <GroupsIcon />
+const Template: ComponentStory<typeof GroupsIcon> = () => (
+  <div style={{ height: 50, width: 50 }}>
+    <GroupsIcon />
+  </div>
+)
 
 export const Component = Template.bind({})
 Component.args = {}

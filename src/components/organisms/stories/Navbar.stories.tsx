@@ -1,14 +1,14 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { Navbar } from '../Navbar'
+import { AppHeader } from '../AppHeader'
 
 export default {
   title: 'Organisms/Navbar',
-  component: Navbar,
+  component: AppHeader,
   argTypes: {},
-} as ComponentMeta<typeof Navbar>
+} as ComponentMeta<typeof AppHeader>
 
-const Template: ComponentStory<typeof Navbar> = () => <Navbar />
+const Template: ComponentStory<typeof AppHeader> = () => <AppHeader />
 
 export const Component = Template.bind({})
 Component.args = {}

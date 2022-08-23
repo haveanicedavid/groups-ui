@@ -11,9 +11,6 @@ const CHAIN_ITEMS = allChainsArray.map(({ chainId, chainName }) => ({
 }))
 
 export const ChainSelect = () => {
-  // see: https://github.com/pmndrs/eslint-plugin-valtio/issues/32
-  // could change to `export function` to fix, but should be able to update soon
-  // eslint-disable-next-line
   const snap = useSnapshot(walletStore)
   return (
     <Select
@@ -21,6 +18,9 @@ export const ChainSelect = () => {
       value={snap.activeChain.chainId}
       onChange={setActiveChain}
       data={CHAIN_ITEMS}
+      transition="pop"
+      transitionDuration={80}
+      transitionTimingFunction="ease-in-out"
     />
   )
 }

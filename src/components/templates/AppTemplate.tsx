@@ -1,19 +1,27 @@
 import { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
+import { AppShell, Container } from '@mantine/core'
 
-import { Box, Stack } from '@/atoms'
-import { Spinner } from '@/molecules'
-import { Navbar } from '@/organisms'
+import { Loader } from '@/molecules'
+import { AppHeader } from '@/organisms'
 
 export const AppTemplate = () => {
   return (
-    <Stack sx={{ maxHeight: '100vh', height: '100%', overflowY: 'auto' }}>
-      <Navbar />
-      <Box component="main" sx={{ height: '100%' }}>
-        <Suspense fallback={<Spinner />}>
+    <AppShell
+      padding="md"
+      header={<AppHeader />}
+      styles={(theme) => ({
+        main: {
+          backgroundColor:
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+        },
+      })}
+    >
+      <Suspense fallback={<Loader />}>
+        <Container size="xl">
           <Outlet />
-        </Suspense>
-      </Box>
-    </Stack>
+        </Container>
+      </Suspense>
+    </AppShell>
   )
 }

@@ -5,6 +5,7 @@ import { AlertTemplate } from '@/templates'
 export const InstallKeplr = () => {
   return (
     <AlertTemplate
+      color="blue"
       text="You need Keplr to run this app"
       btnText="Install"
       onBtnClick={() => openExternalLink('https://wallet.keplr.app/#/home')}

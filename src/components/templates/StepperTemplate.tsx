@@ -1,24 +1,28 @@
 import { ReactNode } from 'react'
 
-import { Stack, Title } from '@/atoms'
-import { PageStepper } from '@/molecules'
+import { Paper, Stack, Stepper, Title } from '@/atoms'
 
 import { PageTemplate } from './PageTemplate'
 
-export const StepperTemplate = (props: {
+export const StepperTemplate = (p: {
   children: ReactNode
   activeStep: number
   steps: string[]
 }) => {
-  const { activeStep, children, steps } = props
   return (
     <Stack justify="flex-start">
-      <PageStepper activeStep={activeStep} steps={steps} />
+      <Paper p="lg" shadow="md">
+        <Stepper active={p.activeStep}>
+          {p.steps.map((step, i) => (
+            <Stepper.Step key={`${step}-${i}`} label={step} />
+          ))}
+        </Stepper>
+      </Paper>
       <PageTemplate>
-        <Title order={2} sx={{ textAlign: 'center' }}>
-          {steps[activeStep]}
+        <Title order={2} sx={{ textAlign: 'center' }} mb="md">
+          {p.steps[p.activeStep]}
         </Title>
-        {children}
+        {p.children}
       </PageTemplate>
     </Stack>
   )
