@@ -20,6 +20,7 @@ import {
 } from '@/atoms'
 import { GroupMembersTable } from '@/organisms/group-members-table'
 import { GroupPolicyTable } from '@/organisms/group-policy-table'
+import { MdCreate } from "react-icons/md";
 
 export default function GroupDetails() {
   const { groupId } = useParams()
@@ -60,9 +61,17 @@ export default function GroupDetails() {
       <Stack w="full" spacing={6}>
         <Flex justify="space-between">
           <Heading>{group?.metadata.name}</Heading>
-          <Button as={RouteLink} to={`/${groupId}/edit`}>
-            Edit Group
-          </Button>
+          <Flex justify="flex-end">
+            <Button>Edit Group</Button>
+            <Button
+              as={RouteLink}
+              to={`/${groupId}/proposal/new`}
+              leftIcon={<MdCreate />}
+              colorScheme="green"
+            >
+              Create Proposal
+            </Button>
+          </Flex>
         </Flex>
         <Text fontSize="larger">{group?.metadata.description}</Text>
         <HStack spacing={3}>

@@ -5,11 +5,11 @@ dist-ssr
 *.local
 node_modules/*
 stats.html
-
+.idea
 ### VisualStudioCode ###
 .vscode/**/*
 !.vscode/settings.suggested.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.idea
+

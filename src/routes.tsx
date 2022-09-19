@@ -20,7 +20,11 @@ export const Routes = () => {
           <Route path="new" element={<GroupCreate />} />
           <Route path=":groupId">
             <Route path="details" element={<GroupDetails />} />
+<<<<<<< Updated upstream:src/routes.tsx
             <Route path="edit" element={<GroupEdit />} />
+=======
+            <Route path="proposal/new" element={<GroupCreate />} />
+>>>>>>> Stashed changes:src/Routes.tsx
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
