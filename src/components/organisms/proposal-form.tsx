@@ -3,9 +3,8 @@ import { type FieldError, FormProvider, useFieldArray, useForm } from 'react-hoo
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
-import { type MemberFormValues, defaultMemberFormValues } from 'models'
-import { SPACING } from 'util/constants'
 import { truncate } from 'util/helpers'
+import { SPACING } from 'util/style.constants'
 import { valid } from 'util/validation/zod'
 
 import {
@@ -14,6 +13,7 @@ import {
   Flex,
   FormCard,
   FormControl,
+  HStack,
   IconButton,
   NumberInput,
   Stack,
@@ -25,15 +25,10 @@ import {
   Thead,
   Tr,
 } from '@/atoms'
-import { InputWithButton } from '@/molecules'
-import {
-  FieldControl,
-  InputField,
-  RadioGroupField,
-  TextareaField,
-} from '@/molecules/FormFields'
+import { InputWithButton, Truncate } from '@/molecules'
+import { FieldControl, TextareaField } from '@/molecules/form-fields'
 
-import { DeleteIcon } from 'assets/tsx'
+import { ProposerFormValues } from '../../types/proposal.types'
 
 export declare enum Exec {
   /**
@@ -54,10 +49,12 @@ export declare enum Exec {
 /** @see @haveanicedavid/cosmos-groups-ts/types/proto/cosmos/group/v1/types */
 export type ProposalFormValues = {
   group_policy_address: string
-  metadata?: string
-  proposers?: Array<string>
+  metadata: string
+  proposers: ProposerFormValues[]
   Exec: Exec
 }
+
+export type ProposalFormKeys = keyof ProposalFormValues
 
 export const defaultProposalFormValues: ProposalFormValues = {
   group_policy_address: '',
@@ -68,19 +65,21 @@ export const defaultProposalFormValues: ProposalFormValues = {
 
 const resolver = zodResolver(
   z.object({
-    group_policy_address: valid.bech32,
+    group_policy_address: valid.bech32Address,
     metadata: valid.json.optional(),
-    proposers: valid.bech32.array(),
+    proposers: valid.bech32Address.array(),
   }),
 )
 
 export const ProposalForm = ({
   btnText = 'Submit',
   defaultValues,
+  disabledFields = [],
   onSubmit,
 }: {
   btnText?: string
   defaultValues: ProposalFormValues
+  disabledFields?: ProposalFormKeys[]
   onSubmit: (data: ProposalFormValues) => void
 }) => {
   const [proposerAddr, setProposerAddr] = useState('')
@@ -89,7 +88,7 @@ export const ProposalForm = ({
     fields: proposerFields,
     append,
     remove,
-  } = useFieldArray({ control: form.control })
+  } = useFieldArray({ control: form.control, name: 'proposers' })
   const {
     watch,
     setValue,
@@ -106,12 +105,12 @@ export const ProposalForm = ({
   })
 
   function validateAddress(addr: string): boolean {
-    if (proposerFields.find((m) => m === addr)) {
+    if (proposerFields.find((m) => m.address === addr)) {
       form.setError('proposers', { type: 'invalid', message: 'Address already added' })
       return false
     }
     try {
-      valid.bech32.parse(addr)
+      valid.bech32Address.parse(addr)
       return true
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -121,10 +120,10 @@ export const ProposalForm = ({
     }
   }
 
-  function addMember(): void {
+  function addProposer(): void {
     if (!validateAddress(proposerAddr)) return
-    const member: MemberFormValues = { ...defaultMemberFormValues, address: proposerAddr }
-    append(member)
+    const proposer: ProposerFormValues = { address: proposerAddr }
+    append(proposer)
     setProposerAddr('')
   }
 
@@ -133,10 +132,7 @@ export const ProposalForm = ({
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Stack spacing={SPACING.formStack}>
-            <InputField required name="name" label="Group name" />
-            <TextareaField name="description" label="Description" />
-            <InputField name="forumLink" label="Link to forum" />
-            <TextareaField name="otherMetadata" label="Other metadata" />
+            <TextareaField name="metadata" label="Proposal metadata" />
             <Flex>
               {/* Because of how the form is structured, we need a controlled
               value which is associated with the `members` array, but doesn't
@@ -157,7 +153,7 @@ export const ProposalForm = ({
                     }
                     setProposerAddr(e.target.value)
                   }}
-                  onBtnClick={addMember}
+                  onBtnClick={addProposer}
                 >
                   {'+ Add'}
                 </InputWithButton>
@@ -168,18 +164,25 @@ export const ProposalForm = ({
                 <Table size="sm">
                   <Thead>
                     <Tr>
-                      <Th>Proposers added</Th>
-                      <Th>Actions</Th>
+                      <Th>Accounts added</Th>
+                      <Th>Weight</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {controlledProposerFields.map((proposer, i) => (
-                      <Tr key={i + proposer.address}>
-                        <Td>{proposer.address}</Td>
-                        <Td pr={0}>
-                          <Flex>
-                            <DeleteButton ml={2} onClick={() => remove(i)} />
-                          </Flex>
+                    {controlledProposerFields.map((member, i) => (
+                      <Tr key={i + member.address}>
+                        <Td>
+                          <Truncate
+                            text={member.address}
+                            headLength={18}
+                            tailLength={22}
+                            tooltipProps={{ maxW: 450 }}
+                          />
+                        </Td>
+                        <Td>
+                          <HStack spacing={4}>
+                            <DeleteButton onClick={() => remove(i)} />
+                          </HStack>
                         </Td>
                       </Tr>
                     ))}

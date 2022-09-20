@@ -61,7 +61,7 @@ local-init: local-clean local-keys
 local-start:
 	#simd start --home $(CHAIN_HOME) --grpc-web.enable true --grpc-web.address 0.0.0.0:9091
 	# simd start --mode validator --home $(CHAIN_HOME)
-	simd start --home $(CHAIN_HOME)
+	simd start --home $(CHAIN_HOME) --log_level debug
 
 .PHONY: query-balance
 query-balance:
