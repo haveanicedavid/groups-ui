@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { handleError } from 'util/errors'
 import { defaultGroupFormValues, defaultGroupPolicyFormValues } from 'util/form.constants'
@@ -7,22 +8,27 @@ import { Wallet } from 'store'
 import { useTxToasts } from 'hooks/useToasts'
 
 import { defaultProposalFormValues, ProposalFormValues } from '@/organisms/proposal-form'
-import GroupTemplate from '@/templates/group-template'
 import ProposalTemplate from '@/templates/proposal-template'
 
 import { createProposal } from '../api/proposal.actions'
+import { useGroupPolicies } from '../hooks/use-query'
 
 export default function ProposalCreate() {
   const { toastErr, toastSuccess } = useTxToasts()
   const [newProposalId, setNewProposalId] = useState<string>()
-
+  const { groupId } = useParams()
+  const { data: policies } = useGroupPolicies(groupId)
+  const [policy] = policies ?? []
   async function handleCreate(values: ProposalFormValues): Promise<boolean> {
     try {
+      console.log('AAAAA', values)
       const { transactionHash, proposalId } = await createProposal(values)
+      values.group_policy_address = policy.address
       setNewProposalId(proposalId?.toString())
       toastSuccess(transactionHash, 'Proposal created!')
       return true
     } catch (err) {
+      console.error('err', err)
       handleError(err)
       toastErr(err, 'Proposal could not be created:')
       return false
@@ -33,6 +39,7 @@ export default function ProposalCreate() {
 
   return (
     <ProposalTemplate
+      groupPolicyAddr={policy.address}
       linkToProposalId={newProposalId}
       initialProposalFormValues={defaultProposalFormValues}
       text={{

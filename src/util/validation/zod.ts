@@ -10,7 +10,12 @@ const member = z.object({
   // metadata: z.string().optional() // TODO: ?
 })
 
+const proposer = z.object({
+  address: bech32Address,
+})
+
 const members = member.array().min(1, 'Must have at least one member')
+const proposers = proposer.array().min(1, 'Must have at least one proposer')
 
 const json = z.string().refine(isJSON, 'Must be a valid JSON string')
 
@@ -62,6 +67,7 @@ export const valid = {
   description,
   groupOrAddress,
   members,
+  proposers,
   json,
   url,
   positiveNumber,

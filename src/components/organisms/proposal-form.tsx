@@ -60,14 +60,13 @@ export const defaultProposalFormValues: ProposalFormValues = {
   group_policy_address: '',
   metadata: '',
   proposers: [],
-  Exec: 1,
+  Exec: -1,
 }
 
 const resolver = zodResolver(
   z.object({
-    group_policy_address: valid.bech32Address,
     metadata: valid.json.optional(),
-    proposers: valid.bech32Address.array(),
+    proposers: valid.proposers,
   }),
 )
 
@@ -97,6 +96,7 @@ export const ProposalForm = ({
   } = form
 
   const watchFieldArray = watch('proposers')
+
   const controlledProposerFields = proposerFields.map((field, index) => {
     return {
       ...field,
@@ -116,6 +116,7 @@ export const ProposalForm = ({
       if (err instanceof z.ZodError) {
         form.setError('proposers', { type: 'invalid', message: err.issues[0].message })
       }
+
       return false
     }
   }
@@ -135,12 +136,12 @@ export const ProposalForm = ({
             <TextareaField name="metadata" label="Proposal metadata" />
             <Flex>
               {/* Because of how the form is structured, we need a controlled
-              value which is associated with the `members` array, but doesn't
+              value which is associated with the `proposers` array, but doesn't
               directly add to it */}
               <FieldControl
                 required
                 error={errors.proposers as FieldError} // TODO fix type cast
-                name="memberAddr"
+                name="proposerAddr"
                 label="Add member accounts"
                 helperText="Input the addresses of the members of this group."
               >
@@ -148,6 +149,7 @@ export const ProposalForm = ({
                   name="proposerAddr"
                   value={proposerAddr}
                   onChange={(e) => {
+                    console.log('PROPOSER errors.proposers', errors.proposers)
                     if (errors.proposers) {
                       form.clearErrors('proposers')
                     }

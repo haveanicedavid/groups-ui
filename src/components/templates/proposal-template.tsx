@@ -31,6 +31,7 @@ export default function ProposalTemplate({
   initialProposalFormValues,
   disabledProposalFormFields,
   linkToProposalId,
+  groupPolicyAddr,
   submit,
   steps,
   text,
@@ -39,6 +40,7 @@ export default function ProposalTemplate({
   initialProposalFormValues: ProposalFormValues
   /** ID of group, used for redirect link */
   linkToProposalId?: string
+  groupPolicyAddr: string
   submit: (values: ProposalFormValues) => Promise<boolean>
   steps: string[]
   text: {
@@ -55,9 +57,14 @@ export default function ProposalTemplate({
   const [submitting, setSubmitting] = useState(false)
   const [priorStep, setPriorStep] = useState(0)
 
-  function handleProposalSubmit(values: ProposalFormValues) {
-    setProposalValues(values)
-    nextStep()
+  async function handleSubmit(proposalValues: ProposalFormValues) {
+    setSubmitting(true)
+    const success = await submit({
+      ...proposalValues,
+      group_policy_address: groupPolicyAddr,
+    })
+    setSubmitting(false)
+    if (success) nextStep()
   }
 
   function handlePrev() {
@@ -65,23 +72,15 @@ export default function ProposalTemplate({
     prevStep()
   }
 
-  async function handleSubmit(policyValues: ProposalFormValues) {
-    setSubmitting(true)
-    const success = await submit({
-      ...proposalValues,
-    })
-    setSubmitting(false)
-    if (success) nextStep()
-  }
-
   function renderStep() {
     switch (activeStep) {
       case 0:
         return (
           <HorizontalSlide key="step-0" fromRight={priorStep !== 0}>
+            <Text>With Policy Address: {groupPolicyAddr}</Text>
             <ProposalForm
               disabledFields={disabledProposalFormFields}
-              onSubmit={handleProposalSubmit}
+              onSubmit={handleSubmit}
               defaultValues={proposalValues}
               btnText="Next"
             />

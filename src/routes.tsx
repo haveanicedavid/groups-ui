@@ -4,6 +4,9 @@ import { Route, Routes as RRouterRoutes, useLocation } from 'react-router-dom'
 import { AnimatePresence } from '@/animations'
 import { AppLayout } from '@/templates/app-layout'
 
+import ProposalCreate from './pages/proposal-create'
+import ProposalDetails from './pages/proposal-details'
+
 const GroupCreate = lazy(() => import('./pages/group-create'))
 const GroupEdit = lazy(() => import('./pages/group-edit'))
 const GroupDetails = lazy(() => import('./pages/group-details'))
@@ -21,7 +24,10 @@ export const Routes = () => {
           <Route path=":groupId">
             <Route path="details" element={<GroupDetails />} />
             <Route path="edit" element={<GroupEdit />} />
-            <Route path="proposal/new" element={<GroupCreate />} />
+            <Route path="proposal/new" element={<ProposalCreate />} />
+          </Route>
+          <Route path="proposals">
+            <Route path=":proposalId/details" element={<ProposalDetails />}></Route>
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
