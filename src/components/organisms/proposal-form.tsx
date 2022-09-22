@@ -1,5 +1,15 @@
 import { useState } from 'react'
 import { type FieldError, FormProvider, useFieldArray, useForm } from 'react-hook-form'
+import {
+  Box,
+  FormLabel,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+} from '@chakra-ui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
@@ -15,7 +25,6 @@ import {
   FormControl,
   HStack,
   IconButton,
-  NumberInput,
   Stack,
   Table,
   TableContainer,
@@ -49,6 +58,8 @@ export declare enum Exec {
 /** @see @haveanicedavid/cosmos-groups-ts/types/proto/cosmos/group/v1/types */
 export type ProposalFormValues = {
   group_policy_address: string
+  msgToAddr: string
+  amount: number
   metadata: string
   proposers: ProposerFormValues[]
   Exec: Exec
@@ -59,6 +70,8 @@ export type ProposalFormKeys = keyof ProposalFormValues
 export const defaultProposalFormValues: ProposalFormValues = {
   group_policy_address: '',
   metadata: '',
+  amount: 150,
+  msgToAddr: '',
   proposers: [],
   Exec: -1,
 }
@@ -66,6 +79,8 @@ export const defaultProposalFormValues: ProposalFormValues = {
 const resolver = zodResolver(
   z.object({
     metadata: valid.json.optional(),
+    amount: valid.positiveNumber,
+    msgToAddr: valid.bech32Address,
     proposers: valid.proposers,
   }),
 )
@@ -84,6 +99,8 @@ export const ProposalForm = ({
   onSubmit: (data: ProposalFormValues) => void
 }) => {
   const [proposerAddr, setProposerAddr] = useState('')
+  const [msgToAddr, setMsgToAddr] = useState('')
+  const [amount, setAmount] = useState(150)
   const form = useForm<ProposalFormValues>({ defaultValues, resolver })
   const {
     fields: proposerFields,
@@ -151,7 +168,6 @@ export const ProposalForm = ({
                   name="proposerAddr"
                   value={proposerAddr}
                   onChange={(e) => {
-                    console.log('PROPOSER errors.proposers', errors.proposers)
                     if (errors.proposers) {
                       form.clearErrors('proposers')
                     }
@@ -194,6 +210,43 @@ export const ProposalForm = ({
                 </Table>
               </TableContainer>
             )}
+            <Flex dir="column">
+              <Box>
+                <FormControl>
+                  <FormLabel> Send funds to this account: </FormLabel>
+                  <Input
+                    name="msgToAddr"
+                    value={msgToAddr}
+                    onChange={(e) => {
+                      setMsgToAddr(e.target.value)
+                      setValue('msgToAddr', e.target.value)
+                    }}
+                  ></Input>
+                </FormControl>
+              </Box>
+              <Box>
+                <FormControl>
+                  <FormLabel>Amount to send:</FormLabel>
+                  <NumberInput
+                    value={amount}
+                    name="amount"
+                    defaultValue={150}
+                    min={0}
+                    max={999999}
+                    onChange={(e) => {
+                      setAmount(parseInt(e, 10))
+                      setValue('amount', parseInt(e, 10))
+                    }}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                </FormControl>
+              </Box>
+            </Flex>
             <Flex justify="end">
               <Button isLoading={isLoading} type="submit">
                 {btnText}

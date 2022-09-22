@@ -33,6 +33,7 @@ import { useTxToasts } from '../hooks/useToasts'
 import { Wallet } from '../store'
 import { ProposalExecMsg } from '../types/proposal.types'
 import { handleError } from '../util/errors'
+
 const statStyle = {
   fontSize: '32px',
 }
@@ -67,16 +68,13 @@ export default function ProposalDetails() {
       clearInterval(interval)
     }
   }, [])
-  console.log('votes ==>', votes)
   const handleSubmit = async (data: VoteFormValues) => {
     setLoading.on()
     data.voter = Wallet.account?.address ? Wallet.account?.address : ''
     data.proposal_id = Long.fromString(proposalId ? proposalId : '')
     data.metadata = ''
     try {
-      console.log('voteProposal', data)
       const resp = await voteProposal(data)
-      console.log('response', resp)
       toastSuccess(resp.transactionHash, 'Vote created!')
       return true
     } catch (err) {

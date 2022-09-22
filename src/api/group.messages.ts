@@ -1,9 +1,11 @@
+import { MsgSend } from '@haveanicedavid/cosmos-groups-ts/types/codegen/cosmos/bank/v1beta1/tx'
+import { Coin } from '@haveanicedavid/cosmos-groups-ts/types/codegen/cosmos/base/v1beta1/coin'
 import Long from 'long'
 
 import type { GroupWithPolicyFormValues, UIGroupMetadata } from 'types'
 import { clearEmptyStr } from 'util/helpers'
 
-import { MsgWithTypeUrl } from './cosmosgroups'
+import { MsgBankWithTypeUrl, MsgWithTypeUrl } from './cosmosgroups'
 import { encodeDecisionPolicy } from './policy.messages'
 
 export function createGroupWithPolicyMsg(values: GroupWithPolicyFormValues) {
@@ -19,7 +21,7 @@ export function createGroupWithPolicyMsg(values: GroupWithPolicyFormValues) {
     threshold,
     votingWindow,
   } = values
-  return MsgWithTypeUrl.createGroupWithPolicy({
+  const groupPolicyResponse = MsgWithTypeUrl.createGroupWithPolicy({
     admin,
     group_policy_metadata: '',
     group_policy_as_admin: policyAsAdmin === 'true',
@@ -41,6 +43,8 @@ export function createGroupWithPolicyMsg(values: GroupWithPolicyFormValues) {
       metadata: JSON.stringify(m.metadata),
     })),
   })
+
+  return groupPolicyResponse
 }
 
 export function updateGroupMetadataMsg({

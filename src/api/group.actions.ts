@@ -1,12 +1,18 @@
+import { MsgSend } from '@haveanicedavid/cosmos-groups-ts/types/codegen/cosmos/bank/v1beta1/tx'
+import { Coin } from '@haveanicedavid/cosmos-groups-ts/types/codegen/cosmos/base/v1beta1/coin'
 import Long from 'long'
 
 import { type GroupWithPolicyFormValues, type UIGroup } from 'types'
 import { throwError } from 'util/errors'
 
-import { Group, signAndBroadcast } from 'store'
+import { Group, signAndBroadcast, Wallet } from 'store'
 
+import { BankSendType } from '../types/bank.types'
+
+import { MsgBankWithTypeUrl } from './cosmosgroups'
 import { createGroupWithPolicyMsg } from './group.messages'
 import { addMembersToGroups, toUIGroup } from './group.utils'
+import { fetchGroupPolicies } from './policy.actions'
 
 export async function createGroupWithPolicy(values: GroupWithPolicyFormValues) {
   try {
@@ -18,6 +24,21 @@ export async function createGroupWithPolicy(values: GroupWithPolicyFormValues) {
       const idRaw = raw.events[0].attributes[0].value
       groupId = JSON.parse(idRaw)
     }
+    const coin: Coin = {
+      denom: 'stake',
+      amount: '1000000000',
+    }
+    // TODO: this is for demo purposes only. Code should be removed.
+    // Send some coins to policy address
+    const policies = await fetchGroupPolicies(groupId)
+    const policy = policies[0]
+    const msgSend: BankSendType = {
+      amount: [coin],
+      from_address: Wallet.account?.address ? Wallet.account.address : '',
+      to_address: policy.address,
+    }
+    const bankSendRes = MsgBankWithTypeUrl.send(msgSend)
+    const dataSend = await signAndBroadcast([bankSendRes])
     return { ...data, groupId }
   } catch (error) {
     throwError(error)
