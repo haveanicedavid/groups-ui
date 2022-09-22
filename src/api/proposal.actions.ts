@@ -13,9 +13,10 @@ import { ProposalFormValues } from '@/organisms/proposal-form'
 import { VoteFormValues } from '@/organisms/vote-form'
 
 import { UIGroup } from '../types'
+import { ProposalExecMsg } from '../types/proposal.types'
 
 import { toUIGroup } from './group.utils'
-import { createProposalMsg } from './proposal.messages'
+import { createProposalMsg, execProposalMsg } from './proposal.messages'
 import { createVoteMsg } from './vote.messages'
 
 export async function createProposal(values: ProposalFormValues) {
@@ -37,6 +38,19 @@ export async function createProposal(values: ProposalFormValues) {
 export async function voteProposal(values: VoteFormValues) {
   try {
     const msg = createVoteMsg(values)
+    const data = await signAndBroadcast([msg])
+    if (data.code !== 0) {
+      throwError(new Error(data.rawLog))
+    }
+    return data
+  } catch (error) {
+    throwError(error)
+  }
+}
+
+export async function execProposal(values: ProposalExecMsg) {
+  try {
+    const msg = execProposalMsg(values)
     const data = await signAndBroadcast([msg])
     if (data.code !== 0) {
       throwError(new Error(data.rawLog))

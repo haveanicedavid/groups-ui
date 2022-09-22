@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { MdEject } from 'react-icons/md'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   Box,
   Container,
@@ -27,10 +27,11 @@ import { Button, Heading, HStack, PageContainer, RouteLink, Stack, Text } from '
 import { ProposalFormValues } from '@/organisms/proposal-form'
 import { defaultVoteFormValues, VoteForm, VoteFormValues } from '@/organisms/vote-form'
 
-import { createProposal, voteProposal } from '../api/proposal.actions'
+import { createProposal, execProposal, voteProposal } from '../api/proposal.actions'
 import { createVoteMsg } from '../api/vote.messages'
 import { useTxToasts } from '../hooks/useToasts'
 import { Wallet } from '../store'
+import { ProposalExecMsg } from '../types/proposal.types'
 import { handleError } from '../util/errors'
 const statStyle = {
   fontSize: '32px',
@@ -51,14 +52,14 @@ const buildVoteStats = (votes?: Vote[]) => {
 }
 
 export default function ProposalDetails() {
-  const { proposalId } = useParams()
+  const { proposalId, groupId } = useParams()
+  const navigate = useNavigate()
   const { toastErr, toastSuccess } = useTxToasts()
   const { data: proposal } = useProposal(proposalId)
   const { data: votes } = useProposalVotes(proposalId)
   const voteStats = buildVoteStats(votes)
   const [isLoading, setLoading] = useBoolean(false)
   const [time, setTime] = useState(Date.now())
-  const defaultValues = { vote: 'VOTE_OPTION_YES' }
 
   useEffect(() => {
     const interval = setInterval(() => setTime(Date.now()), 1000)
@@ -86,6 +87,25 @@ export default function ProposalDetails() {
       setLoading.off()
     }
   }
+  const handleExecute = async () => {
+    setLoading.on()
+    const data: ProposalExecMsg = {
+      proposal_id: Long.fromString(proposalId ? proposalId : ''),
+      executor: Wallet.account?.address ? Wallet.account?.address : '',
+    }
+    try {
+      const resp = await execProposal(data)
+      toastSuccess(resp.transactionHash, 'Proposal Executed!')
+      navigate(`/`)
+      return true
+    } catch (err) {
+      handleError(err)
+      toastErr(err, 'Vote could not be created:')
+      return false
+    } finally {
+      setLoading.off()
+    }
+  }
   return (
     <PageContainer>
       <Stack w="full" spacing={6}>
@@ -99,7 +119,12 @@ export default function ProposalDetails() {
             >{`Status: ${proposal?.status}`}</Tag>
           </div>
           <Flex>
-            <Button leftIcon={<MdEject />} colorScheme="blue">
+            <Button
+              isLoading={isLoading}
+              onClick={handleExecute}
+              leftIcon={<MdEject />}
+              colorScheme="blue"
+            >
               Execute Proposal
             </Button>
           </Flex>
