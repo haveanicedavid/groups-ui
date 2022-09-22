@@ -21,16 +21,15 @@ export default function ProposalCreate() {
   const [policy] = policies ?? []
   async function handleCreate(values: ProposalFormValues): Promise<boolean> {
     try {
-      console.log('AAAAA', values)
       const { transactionHash, proposalId } = await createProposal(values)
       values.group_policy_address = policy.address
       setNewProposalId(proposalId?.toString())
-      toastSuccess(transactionHash, 'Proposal created!')
+      toastSuccess(transactionHash, 'Vote created!')
       return true
     } catch (err) {
       console.error('err', err)
       handleError(err)
-      toastErr(err, 'Proposal could not be created:')
+      toastErr(err, 'Vote could not be created:')
       return false
     }
   }

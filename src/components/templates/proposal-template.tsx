@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useBoolean } from '@chakra-ui/react'
 
 import type { GroupWithPolicyFormValues } from 'types'
 
@@ -56,7 +57,6 @@ export default function ProposalTemplate({
   )
   const [submitting, setSubmitting] = useState(false)
   const [priorStep, setPriorStep] = useState(0)
-
   async function handleSubmit(proposalValues: ProposalFormValues) {
     setSubmitting(true)
     const success = await submit({
@@ -79,6 +79,7 @@ export default function ProposalTemplate({
           <HorizontalSlide key="step-0" fromRight={priorStep !== 0}>
             <Text>With Policy Address: {groupPolicyAddr}</Text>
             <ProposalForm
+              isLoading={submitting}
               disabledFields={disabledProposalFormFields}
               onSubmit={handleSubmit}
               defaultValues={proposalValues}

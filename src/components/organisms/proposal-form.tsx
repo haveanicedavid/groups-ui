@@ -73,11 +73,13 @@ const resolver = zodResolver(
 export const ProposalForm = ({
   btnText = 'Submit',
   defaultValues,
+  isLoading,
   disabledFields = [],
   onSubmit,
 }: {
   btnText?: string
   defaultValues: ProposalFormValues
+  isLoading: boolean
   disabledFields?: ProposalFormKeys[]
   onSubmit: (data: ProposalFormValues) => void
 }) => {
@@ -142,8 +144,8 @@ export const ProposalForm = ({
                 required
                 error={errors.proposers as FieldError} // TODO fix type cast
                 name="proposerAddr"
-                label="Add member accounts"
-                helperText="Input the addresses of the members of this group."
+                label="Add proposers accounts"
+                helperText="Input the addresses of the proposers of this group."
               >
                 <InputWithButton
                   name="proposerAddr"
@@ -193,7 +195,9 @@ export const ProposalForm = ({
               </TableContainer>
             )}
             <Flex justify="end">
-              <Button type="submit">{btnText}</Button>
+              <Button isLoading={isLoading} type="submit">
+                {btnText}
+              </Button>
             </Flex>
           </Stack>
         </form>

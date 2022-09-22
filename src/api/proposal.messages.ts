@@ -15,3 +15,5 @@ export function createProposalMsg(values: ProposalFormValues) {
   }
   return MsgWithTypeUrl.submitProposal(message)
 }
+
+

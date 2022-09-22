@@ -24,6 +24,8 @@ const name = z
   .min(1, 'Name is required')
   .max(50, 'Name must be less than 50 characters')
 
+const voteOption = z.number()
+
 const description = z
   .string()
   .min(4, 'Description is too short')
@@ -64,6 +66,7 @@ export const valid = {
   emptyStr,
   boolStr,
   name,
+  voteOption,
   description,
   groupOrAddress,
   members,
