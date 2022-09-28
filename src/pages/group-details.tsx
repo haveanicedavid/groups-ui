@@ -1,11 +1,18 @@
+import { MdCreate } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
+import { Proposal } from '@haveanicedavid/cosmos-groups-ts/types/codegen/cosmos/group/v1/types'
 
 import type { MemberFormValues } from 'types'
 import { handleError, throwError } from 'util/errors'
 
 import { signAndBroadcast } from 'store'
 import { updateGroupMembersMsg } from 'api/member.messages'
-import { useGroup, useGroupMembers, useGroupPolicies } from 'hooks/use-query'
+import {
+  useGroup,
+  useGroupMembers,
+  useGroupPolicies,
+  useGroupPolicyProposals,
+} from 'hooks/use-query'
 import { useTxToasts } from 'hooks/useToasts'
 
 import {
@@ -21,20 +28,23 @@ import {
 import { GroupMembersTable } from '@/organisms/group-members-table'
 import { GroupPolicyTable } from '@/organisms/group-policy-table'
 
+import { GroupProposalsTable } from '../components/organisms/group-proposals-table'
+
 export default function GroupDetails() {
   const { groupId } = useParams()
   const { data: group } = useGroup(groupId)
+
   const { data: members, refetch: refetchMembers } = useGroupMembers(groupId)
   const { data: policies } = useGroupPolicies(groupId)
   const { toastSuccess, toastErr } = useTxToasts()
 
-  console.log('group :>> ', group)
-  console.log('members :>> ', members)
-
   const [policy] = policies ?? []
-  console.log('policy :>> ', policy)
+  const { data: proposalsData } = useGroupPolicyProposals(policy?.address)
+  let proposals: Proposal[] = []
+  if (proposalsData) {
+    proposals = proposalsData.proposals
+  }
   const policyIsAdmin = policy?.admin === policy?.address
-
   async function handleUpdateMembers(values: MemberFormValues[]): Promise<boolean> {
     if (!groupId || !group?.admin)
       throwError(`Can't update members: missing group ID or admin`)
@@ -60,9 +70,17 @@ export default function GroupDetails() {
       <Stack w="full" spacing={6}>
         <Flex justify="space-between">
           <Heading>{group?.metadata.name}</Heading>
-          <Button as={RouteLink} to={`/${groupId}/edit`}>
-            Edit Group
-          </Button>
+          <Flex justify="flex-end">
+            <Button>Edit Group</Button>
+            <Button
+              as={RouteLink}
+              to={`/${groupId}/proposal/new`}
+              leftIcon={<MdCreate />}
+              colorScheme="green"
+            >
+              Create Proposal
+            </Button>
+          </Flex>
         </Flex>
         <Text fontSize="larger">{group?.metadata.description}</Text>
         <HStack spacing={3}>
@@ -73,6 +91,7 @@ export default function GroupDetails() {
         </HStack>
         <GroupPolicyTable policies={policies || []} />
         <GroupMembersTable members={members || []} onSave={handleUpdateMembers} />
+        <GroupProposalsTable proposals={proposals} />
       </Stack>
     </PageContainer>
   )

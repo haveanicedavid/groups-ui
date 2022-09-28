@@ -8,6 +8,12 @@ import {
 import { fetchGroupMembers } from 'api/member.actions'
 import { fetchGroupPolicies } from 'api/policy.actions'
 
+import {
+  fetchProposalById,
+  fetchProposalsByPolicyAddr,
+  fetchProposalVotesById,
+} from '../api/proposal.actions'
+
 export function useGroup(groupId?: string) {
   return useQuery(
     ['group', groupId],
@@ -15,6 +21,36 @@ export function useGroup(groupId?: string) {
       return fetchGroupById(groupId)
     },
     { enabled: !!groupId },
+  )
+}
+
+export function useProposal(proposalId?: string) {
+  return useQuery(
+    ['proposal', proposalId],
+    () => {
+      return fetchProposalById(proposalId)
+    },
+    { enabled: !!proposalId },
+  )
+}
+
+export function useProposalVotes(proposalId?: string) {
+  return useQuery(
+    ['proposalVotes', proposalId],
+    () => {
+      return fetchProposalVotesById(proposalId)
+    },
+    { enabled: !!proposalId },
+  )
+}
+
+export function useGroupPolicyProposals(groupAddr: string) {
+  return useQuery(
+    ['proposalsGroupPolicy', groupAddr],
+    () => {
+      return fetchProposalsByPolicyAddr(groupAddr)
+    },
+    { enabled: !!groupAddr },
   )
 }
 

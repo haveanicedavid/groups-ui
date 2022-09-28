@@ -1,12 +1,18 @@
+import { MsgSend } from '@haveanicedavid/cosmos-groups-ts/types/codegen/cosmos/bank/v1beta1/tx'
+import { Coin } from '@haveanicedavid/cosmos-groups-ts/types/codegen/cosmos/base/v1beta1/coin'
 import Long from 'long'
 
 import { type GroupWithPolicyFormValues, type UIGroup } from 'types'
 import { throwError } from 'util/errors'
 
-import { Group, signAndBroadcast } from 'store'
+import { Group, signAndBroadcast, Wallet } from 'store'
 
+import { BankSendType } from '../types/bank.types'
+
+import { MsgBankWithTypeUrl } from './cosmosgroups'
 import { createGroupWithPolicyMsg } from './group.messages'
 import { addMembersToGroups, toUIGroup } from './group.utils'
+import { fetchGroupPolicies } from './policy.actions'
 
 export async function createGroupWithPolicy(values: GroupWithPolicyFormValues) {
   try {
