@@ -12,7 +12,6 @@ export const GroupProposalsTable = ({ proposals }: { proposals: Proposal[] }) =>
     const proposalsVals = proposals.map((p) => p)
     return [...proposalsVals]
   }, [proposals])
-  const updatedBg = useColorModeValue('blue.100', 'blue.800')
   const tailSize = useBreakpointValue({ base: 4, sm: 6, md: 25, lg: 35, xl: 100 })
   return (
     <TableContainer w="full" borderRadius="lg" borderWidth={2} shadow="md">
