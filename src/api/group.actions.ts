@@ -24,21 +24,6 @@ export async function createGroupWithPolicy(values: GroupWithPolicyFormValues) {
       const idRaw = raw.events[0].attributes[0].value
       groupId = JSON.parse(idRaw)
     }
-    const coin: Coin = {
-      denom: 'stake',
-      amount: '1000000000',
-    }
-    // TODO: this is for demo purposes only. Code should be removed.
-    // Send some coins to policy address
-    const policies = await fetchGroupPolicies(groupId)
-    const policy = policies[0]
-    const msgSend: BankSendType = {
-      amount: [coin],
-      from_address: Wallet.account?.address ? Wallet.account.address : '',
-      to_address: policy.address,
-    }
-    const bankSendRes = MsgBankWithTypeUrl.send(msgSend)
-    const dataSend = await signAndBroadcast([bankSendRes])
     return { ...data, groupId }
   } catch (error) {
     throwError(error)
